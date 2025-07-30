@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Geo Cube - Rubik's Cube Solver</title>
+		<meta name="description" content="Interactive 3D Rubik's cube solver with multiple algorithms, 2D view, and custom shuffle.">
+		<link rel="icon" type="image/png" href="assets/favicon.svg">
+
+		<!------ FONT ------>
+		<link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet" type="text/css">
+		<!-- <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'> -->
+
+		<!------ CSS ------>
+		<link rel="stylesheet" type="text/css" href="lib/cuber/css/cube.css">
+		<link rel="stylesheet" type="text/css" href="cube/css/style.css">
+
+		<!-- cube source code -->
+		<script type="text/javascript" src="lib/cuber/js/vendor/tween.min.js"></script>
+
+		<!--  Three.js  -->
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/Three.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/core/EventDispatcher.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Math.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Quaternion.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Vector2.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Vector3.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Box3.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Sphere.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Euler.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Matrix3.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Matrix4.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/core/Object3D.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/cameras/Camera.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/cameras/PerspectiveCamera.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Ray.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/threejs/src/math/Plane.js"></script>
+
+		<script type="text/javascript" src="lib/cuber/js/ERNO.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/vendor/CSS3DRenderer.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/utils/utils.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/utils/Number.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/utils/String.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/utils/Array.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/colors.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/directions.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/queues.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/twists.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/cubelets.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/groups.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/slices.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/folds.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/projector.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/interaction.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/controls.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/cubes.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/solvers.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/renderer.js"></script>
+
+		<!-- implementation -->
+		<script type="text/javascript" src="lib/cuber/js/jquery-3.4.0.min.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/extras/renderers/iecss3d.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/extras/renderers/ierenderer.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/extras/controls/locked.js"></script>
+		<script type="text/javascript" src="lib/cuber/js/extras/deviceMotion.js"></script>
+
+		<!-- Two-phase Algorithm  -->
+		<script type="text/javascript" src="lib/cubejs/cube.js"></script>
+		<script type="text/javascript" src="lib/cubejs/solve.js"></script>
+
+		<!-- Typewriting Plugin -->
+		<script type="text/javascript" src="lib/typewriting/typewriting.js"></script>
+
+		<!-- Just a Cube -->
+		<script type="text/javascript" src="cube/js/initial.js"></script>
+		<script type="text/javascript" src="cube/js/util.js"></script>
+		<script type="text/javascript" src="cube/js/lbl.js"></script>
+		<script type="text/javascript" src="cube/js/two-phase.js"></script>
+	</head>
+
+	<body>
+		<!-- Stars Background Canvas -->
+		<canvas id="starsCanvas"></canvas>
+		
+		<div id="container"></div>
+    <div class="type">
+		  <div id="terminal"></div>
+		</div>
+		<!-- 2D Cube View (now below terminal, above buttons) -->
+		<div class="cube-2d-container">
+			<canvas id="cube2dCanvas" width="240" height="220"></canvas>
+			<div class="cube-2d-label">2D View</div>
+		</div>
+    <div class="solve">
+			<button onclick="cubeGL.solve()">Solve | LBL</button>
+			<button onclick="solveTwoPhase()">Solve | Two-phase</button>
+			<button onclick="cubeShuffle()">Shuffle</button>
+			<button onclick="cubeReset()">Reset</button>
+			<div class="custom-shuffle">
+				<input type="text" id="custom-shuffle-input" placeholder="Enter moves (e.g., UrdFbf)" maxlength="50">
+				<button onclick="customShuffle()">Custom Shuffle</button>
+			</div>
+		<a href="https://github.com/" target="_blank" rel="noreferrer">
+        <button>Github</button>
+    </a>
+		</div>
+		<div class="twist">
+			<h1>Rotate</h1>
+			<button onclick="cubeGL.twist('U')">U</button>
+			<button onclick="cubeGL.twist('u')">u</button><br>
+			<button onclick="cubeGL.twist('D')">D</button>
+			<button onclick="cubeGL.twist('d')">d</button><br>
+			<button onclick="cubeGL.twist('F')">F</button>
+			<button onclick="cubeGL.twist('f')">f</button><br>
+			<button onclick="cubeGL.twist('B')">B</button>
+			<button onclick="cubeGL.twist('b')">b</button><br>
+			<button onclick="cubeGL.twist('L')">L</button>
+			<button onclick="cubeGL.twist('l')">l</button><br>
+			<button onclick="cubeGL.twist('R')">R</button>
+			<button onclick="cubeGL.twist('r')">r</button>
+			<button onclick="cubeGL.twist('S')">S</button>
+			<button onclick="cubeGL.twist('s')">s</button>
+			<button onclick="cubeGL.twist('E')">E</button>
+			<button onclick="cubeGL.twist('e')">e</button>
+			<button onclick="cubeGL.twist('M')">M</button>
+			<button onclick="cubeGL.twist('m')">m</button>
+		</div>
+		
+		<!-- Terminal History Section -->
+		<div class="terminal-history">
+			<h2>Terminal History</h2>
+			<button onclick="clearTerminalHistory()" class="clear-btn">Clear History</button>
+			<div id="terminal-log"></div>
+		</div>
+		
+		<script>
+			// Terminal history capture system
+			let terminalHistory = [];
+			let originalTypeInfo = window.typeInfo;
+			
+			// Override the typeInfo function to capture messages
+			window.typeInfo = function(sentence, if_del) {
+				// Store the message in history
+				const timestamp = new Date().toLocaleTimeString();
+				terminalHistory.push({
+					message: sentence,
+					timestamp: timestamp,
+					deleted: if_del
+				});
+				
+				// Update the terminal log display
+				updateTerminalLog();
+				
+				// Call the original function
+				return originalTypeInfo(sentence, if_del);
+			};
+			
+			// Function to update the terminal log display
+			function updateTerminalLog() {
+				const logElement = document.getElementById('terminal-log');
+				if (logElement) {
+					logElement.innerHTML = '';
+					if (terminalHistory.length === 0) {
+						const placeholder = document.createElement('div');
+						placeholder.className = 'log-placeholder';
+						placeholder.innerText = '🚀 Start using the cube to see your history here!';
+						logElement.appendChild(placeholder);
+						return;
+					}
+					// Reverse the array to show newest first
+					terminalHistory.slice().reverse().forEach((entry, index) => {
+						const entryDiv = document.createElement('div');
+						entryDiv.className = 'log-entry';
+						entryDiv.innerHTML = `
+							<span class="timestamp">[${entry.timestamp}]</span>
+							<span class="message">${entry.message}</span>
+							${entry.deleted ? '<span class="deleted-tag">(deleted)</span>' : ''}
+						`;
+						logElement.appendChild(entryDiv);
+					});
+					
+					// Auto-scroll to top since newest entries are at the top
+					logElement.scrollTop = 0;
+				}
+			}
+			
+			// Clear terminal history function
+			window.clearTerminalHistory = function() {
+				terminalHistory = [];
+				updateTerminalLog();
+			};
+			
+			// Also capture messages from the LBL solver
+			document.addEventListener('DOMContentLoaded', function() {
+				// Override the typewriter in the LBL solver
+				const originalTypewriter = window.Typewriter;
+				if (originalTypewriter) {
+					window.Typewriter = function(element) {
+						const typewriter = new originalTypewriter(element);
+						const originalTypeString = typewriter.typeString;
+						
+						typewriter.typeString = function(text) {
+							// Capture the message
+							const timestamp = new Date().toLocaleTimeString();
+							terminalHistory.push({
+								message: text,
+								timestamp: timestamp,
+								deleted: false
+							});
+							updateTerminalLog();
+							
+							return originalTypeString.call(this, text);
+						};
+						
+						return typewriter;
+					};
+				}
+			});
+		</script>
+		
+		<!-- Stars Effect Script -->
+		<script>
+			// Stars background effect
+			const canvas = document.getElementById('starsCanvas');
+			const ctx = canvas.getContext('2d');
+
+			// Set canvas size to window size
+			function resizeCanvas() {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+			}
+			resizeCanvas();
+			window.addEventListener('resize', resizeCanvas);
+
+			// Star class
+			class Star {
+				constructor() {
+					this.reset();
+					this.trail = []; // Array to store trail positions
+					this.maxTrailLength = 20; // Increased trail length
+				}
+
+				reset() {
+					// Start from center with a larger random offset
+					const spawnRadius = 150; // Increased from 50 to 150 (3x)
+					const randomAngle = Math.random() * Math.PI * 2;
+					const randomDistance = Math.random() * spawnRadius;
+					
+					this.x = canvas.width / 2 + Math.cos(randomAngle) * randomDistance;
+					this.y = canvas.height / 2 + Math.sin(randomAngle) * randomDistance;
+					this.px = this.x;
+					this.py = this.y;
+					this.hue = Math.random() * 50 + 200; // Blue-white stars
+					this.size = Math.random() * 2 + 1;
+					this.speed = Math.random() * 2.5 + 1.0; // Doubled speed (2.5-3.5 range)
+					
+					// Random angle for outward movement
+					this.angle = Math.random() * Math.PI * 2;
+					this.distance = randomDistance; // Start from the spawn position
+					
+					// Initialize trail
+					this.trail = [];
+					for (let i = 0; i < this.maxTrailLength; i++) {
+						this.trail.push({x: this.x, y: this.y});
+					}
+				}
+
+				update(mouseX, mouseY) {
+					// Update trail
+					this.trail.pop();
+					this.trail.unshift({x: this.x, y: this.y});
+
+					this.px = this.x;
+					this.py = this.y;
+					this.distance += this.speed * 1.0; // Doubled movement speed (from 0.5 to 1.0)
+
+					// Move outward from center
+					this.x = canvas.width/2 + Math.cos(this.angle) * this.distance;
+					this.y = canvas.height/2 + Math.sin(this.angle) * this.distance;
+
+					// Check if star is off-screen
+					const margin = 100;
+					if (this.x < -margin || this.x > canvas.width + margin || 
+						this.y < -margin || this.y > canvas.height + margin) {
+						this.reset();
+					}
+				}
+
+				draw() {
+					const size = this.size;
+
+					// Draw trail with fading effect
+					for (let i = 0; i < this.trail.length - 1; i++) {
+						const alpha = (1 - i / this.trail.length) * 0.8;
+						ctx.beginPath();
+						ctx.moveTo(this.trail[i].x, this.trail[i].y);
+						ctx.lineTo(this.trail[i + 1].x, this.trail[i + 1].y);
+						ctx.strokeStyle = `hsla(${this.hue}, 100%, 50%, ${alpha})`;
+						ctx.lineWidth = size * (1 - i / this.trail.length);
+						ctx.stroke();
+					}
+
+					// Draw star
+					ctx.beginPath();
+					ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+					ctx.fillStyle = `hsla(${this.hue}, 100%, 50%, 0.8)`;
+					ctx.fill();
+				}
+			}
+
+			// Create stars
+			const stars = [];
+			const numStars = 800;
+			for (let i = 0; i < numStars; i++) {
+				stars.push(new Star());
+			}
+
+			// Mouse position
+			let mouseX = canvas.width / 2;
+			let mouseY = canvas.height / 2;
+
+			document.addEventListener('mousemove', (e) => {
+				mouseX = e.clientX;
+				mouseY = e.clientY;
+			});
+
+			// Animation loop
+			function animate() {
+				// Clear with a slightly stronger fade effect to prevent too many trails
+				ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Increased fade effect
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+				// Update and draw stars
+				stars.forEach(star => {
+					star.update(mouseX, mouseY);
+					star.draw();
+				});
+
+				requestAnimationFrame(animate);
+			}
+
+			// Start animation
+			animate();
+		</script>
+		
+		<!-- 2D Cube View Script -->
+		<script>
+			// 2D Cube View functionality
+			const cube2dCanvas = document.getElementById('cube2dCanvas');
+			const cube2dCtx = cube2dCanvas.getContext('2d');
+			
+			// Color mapping for cube faces
+			const colorMap = {
+				'white': '#F3F3F3',
+				'yellow': '#F5B400',
+				'red': '#DC422F',
+				'orange': '#E87000',
+				'blue': '#3D81F6',
+				'green': '#009D54'
+			};
+			
+			// Face layout for 2D view (new pattern)
+			const faceLayout = {
+				right: { x: 60, y: 20, size: 60 },
+				up: { x: 0, y: 80, size: 60 },
+				front: { x: 60, y: 80, size: 60 },
+				back: { x: 120, y: 80, size: 60 },
+				down: { x: 180, y: 80, size: 60 },
+				left: { x: 60, y: 140, size: 60 }
+			};
+			
+			// Function to get all cubelet colors from cube state
+			function getAllCubeletColors() {
+				if (!window.cubeGL) return {};
+				
+				const faces = {};
+				
+				try {
+					// Get all 9 cubelets for each face
+					faces.up = [];
+					faces.down = [];
+					faces.left = [];
+					faces.right = [];
+					faces.front = [];
+					faces.back = [];
+					
+					// Up face (0-8)
+					for (let i = 0; i < 9; i++) {
+						faces.up.push(window.cubeGL.up.cubelets[i].up.color.name);
+					}
+					
+					// Down face (0-8)
+					for (let i = 0; i < 9; i++) {
+						faces.down.push(window.cubeGL.down.cubelets[i].down.color.name);
+					}
+					
+					// Left face (0-8)
+					for (let i = 0; i < 9; i++) {
+						faces.left.push(window.cubeGL.left.cubelets[i].left.color.name);
+					}
+					
+					// Right face (0-8)
+					for (let i = 0; i < 9; i++) {
+						faces.right.push(window.cubeGL.right.cubelets[i].right.color.name);
+					}
+					
+					// Front face (0-8)
+					for (let i = 0; i < 9; i++) {
+						faces.front.push(window.cubeGL.front.cubelets[i].front.color.name);
+					}
+					
+					// Back face (0-8)
+					for (let i = 0; i < 9; i++) {
+						faces.back.push(window.cubeGL.back.cubelets[i].back.color.name);
+					}
+				} catch (e) {
+					console.log('Cube not ready yet');
+				}
+				
+				return faces;
+			}
+			
+			// Function to draw a detailed face with all 9 squares
+			function drawDetailedFace(faceName, x, y, size, colors) {
+				const squareSize = size / 3;
+				
+				// Draw each of the 9 squares
+				for (let row = 0; row < 3; row++) {
+					for (let col = 0; col < 3; col++) {
+						const index = row * 3 + col;
+						const color = colors[index] || 'black';
+						const hexColor = colorMap[color] || '#000';
+						
+						const squareX = x + col * squareSize;
+						const squareY = y + row * squareSize;
+						
+						// Draw square background
+						cube2dCtx.fillStyle = hexColor;
+						cube2dCtx.fillRect(squareX, squareY, squareSize, squareSize);
+						
+						// Draw square border
+						cube2dCtx.strokeStyle = '#333';
+						cube2dCtx.lineWidth = 1;
+						cube2dCtx.strokeRect(squareX, squareY, squareSize, squareSize);
+					}
+				}
+				
+				// Draw face border
+				cube2dCtx.strokeStyle = '#666';
+				cube2dCtx.lineWidth = 2;
+				cube2dCtx.strokeRect(x, y, size, size);
+				
+				// Draw face label in the center of the face
+				cube2dCtx.fillStyle = '#000000';
+				cube2dCtx.font = 'bold 16px Arial';
+				cube2dCtx.textAlign = 'center';
+				cube2dCtx.textBaseline = 'middle';
+				
+				// Map face names to short forms
+				const faceLabels = {
+					'up': 'U',
+					'down': 'D', 
+					'left': 'L',
+					'right': 'R',
+					'front': 'F',
+					'back': 'B'
+				};
+				
+				const label = faceLabels[faceName] || faceName.toUpperCase();
+				cube2dCtx.fillText(label, x + size/2, y + size/2);
+			}
+			
+			// Function to render the detailed 2D cube view
+			function renderDetailed2DCube() {
+				// Clear canvas
+				cube2dCtx.fillStyle = '#000';
+				cube2dCtx.fillRect(0, 0, cube2dCanvas.width, cube2dCanvas.height);
+				
+				// Get current face colors
+				const faceColors = getAllCubeletColors();
+				
+				// Draw each face with all 9 squares
+				Object.keys(faceLayout).forEach(faceName => {
+					const layout = faceLayout[faceName];
+					const colors = faceColors[faceName] || Array(9).fill('black');
+					drawDetailedFace(faceName, layout.x, layout.y, layout.size, colors);
+				});
+			}
+			
+			// Function to update 2D view when cube changes
+			window.update2DCubeView = function() {
+				if (window.cubeGL) {
+					renderDetailed2DCube();
+				}
+			};
+			
+			// Override the original twist function to update 2D view
+			document.addEventListener('DOMContentLoaded', function() {
+				// Wait for cube to be initialized
+				setTimeout(() => {
+					updateTerminalLog(); // Ensure placeholder is shown on load
+					if (window.cubeGL && window.cubeGL.twist) {
+						const originalTwist = window.cubeGL.twist;
+						window.cubeGL.twist = function(move) {
+							const result = originalTwist.call(this, move);
+							setTimeout(() => {
+								if (window.update2DCubeView) {
+									window.update2DCubeView();
+								}
+							}, 100);
+							return result;
+						};
+					}
+				}, 1000);
+			});
+			
+			// Update 2D view periodically
+			setInterval(() => {
+				if (window.update2DCubeView) {
+					window.update2DCubeView();
+				}
+			}, 1000);
+		</script>
+	</body>
+</html>
