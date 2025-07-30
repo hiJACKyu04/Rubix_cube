@@ -224,7 +224,7 @@ solver.logic = function(cube) {
 		Twist_U();
 
 		// 中层
-		tmp = cubeState.lf;
+		var tmp = cubeState.lf;
 		cubeState.lf = cubeState.fr;
 		cubeState.fr = cubeState.rb;
 		cubeState.rb = cubeState.bl;
