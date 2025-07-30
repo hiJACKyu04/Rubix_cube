@@ -1,14 +1,14 @@
 window.solver = new ERNO.Solver();
 
 solver.logic = function(cube) {
-	// 魔方状态
+	// Cube state
 	var cubeState = {};
-	// （l, f, r, b）每种颜色下一面的颜色
+	// (l, f, r, b) next color for each face
 	var nextColor = {};
 	var nextFace = {l:"f", f:"r", r:"b", b:"l"};
 	var prevFace = {l:"b", b:"r", r:"f", f:"l"};
 
-	// 复原步骤
+	// Solution steps
 	var stepName = {
 		0: "First layer edges",
 		1: "First layer corners",
@@ -26,7 +26,7 @@ solver.logic = function(cube) {
 	solveCube();
 
 
-	// ------------------ 执行并打印复原步骤 ------------------
+	// ------------------ Execute and print solution steps ------------------
 	function Execute(steps) {
 		let totalMoves = 0;
 		let allMoves = "";
@@ -66,7 +66,7 @@ solver.logic = function(cube) {
 		}
 	}
 
-	// ------------------ 获得魔方当前状态 ------------------
+	// ------------------ Get current cube state ------------------
 	function getCubeState() {
 		cubeState = {
 			d: cubeGL.down.cubelets[4].down.color.name[0],
@@ -114,18 +114,18 @@ solver.logic = function(cube) {
 	}
 
 
-	// ------------------- 模拟魔方按解法转动后的状态变化 -------------------
+	// ------------------- Simulate cube state changes after moves -------------------
 
-	// Back 面顺时针旋转 90°
+	// Back face clockwise rotation 90°
 	function Twist_B() {
-		// 棱块
+		// Edge pieces
 		var tmp = cubeState.ub;
 		cubeState.ub = cubeState.rb;
 		cubeState.rb = cubeState.db;
 		cubeState.db = cubeState.bl[1] + cubeState.bl[0];
 		cubeState.bl = tmp[1] + tmp[0];
 
-		// 角块
+		// Corner pieces
 		tmp = cubeState.ubl;
 		cubeState.ubl = cubeState.urb[1] + cubeState.urb[2] + cubeState.urb[0];
 		cubeState.urb = cubeState.drb[1] + cubeState.drb[0] + cubeState.drb[2];
@@ -133,16 +133,16 @@ solver.logic = function(cube) {
 		cubeState.dbl = tmp[2] + tmp[1] + tmp[0];
 	}
 
-	// Right 面顺时针旋转 90°
+	// Right face clockwise rotation 90°
 	function Twist_R() {
-		// 棱块
+		// Edge pieces
 		var tmp = cubeState.ur;
 		cubeState.ur = cubeState.fr;
 		cubeState.fr = cubeState.dr;
 		cubeState.dr = cubeState.rb[1] + cubeState.rb[0];
 		cubeState.rb = tmp[1] + tmp[0];
 
-		// 角块
+		// Corner pieces
 		tmp = cubeState.urb;
 		cubeState.urb = cubeState.ufr[1] + cubeState.ufr[2] + cubeState.ufr[0];
 		cubeState.ufr = cubeState.dfr[1] + cubeState.dfr[0] + cubeState.dfr[2];
@@ -150,16 +150,16 @@ solver.logic = function(cube) {
 		cubeState.drb = tmp[2] + tmp[1] + tmp[0];
 	};
 
-	// Front 面顺时针旋转 90°
+	// Front face clockwise rotation 90°
 	function Twist_F() {
-		// 棱块
+		// Edge pieces
 		var tmp = cubeState.uf;
 		cubeState.uf = cubeState.lf;
 		cubeState.lf = cubeState.df;
 		cubeState.df = cubeState.fr[1] + cubeState.fr[0];
 		cubeState.fr = tmp[1] + tmp[0];
 
-		// 角块
+		// Corner pieces
 		tmp = cubeState.ufr;
 		cubeState.ufr = cubeState.ulf[1] + cubeState.ulf[2] + cubeState.ulf[0];
 		cubeState.ulf = cubeState.dlf[1] + cubeState.dlf[0] + cubeState.dlf[2];
@@ -167,16 +167,16 @@ solver.logic = function(cube) {
 		cubeState.dfr = tmp[2] + tmp[1] + tmp[0];
 	}
 
-	// Left 面顺时针旋转 90°
+	// Left face clockwise rotation 90°
 	function Twist_L() {
-		// 棱块
+		// Edge pieces
 		var tmp = cubeState.ul;
 		cubeState.ul = cubeState.bl;
 		cubeState.bl = cubeState.dl;
 		cubeState.dl = cubeState.lf[1] + cubeState.lf[0];
 		cubeState.lf = tmp[1] + tmp[0];
 
-		// 角块
+		// Corner pieces
 		tmp = cubeState.ulf;
 		cubeState.ulf = cubeState.ubl[1] + cubeState.ubl[2] + cubeState.ubl[0];
 		cubeState.ubl = cubeState.dbl[1] + cubeState.dbl[0] + cubeState.dbl[2];
@@ -184,16 +184,16 @@ solver.logic = function(cube) {
 		cubeState.dlf = tmp[2] + tmp[1] + tmp[0];
 	}
 
-	// Up 面顺时针旋转 90°
+	// Up face clockwise rotation 90°
 	function Twist_U() {
-		// 棱块
+		// Edge pieces
 		var tmp = cubeState.ul;
 		cubeState.ul = cubeState.uf;
 		cubeState.uf = cubeState.ur;
 		cubeState.ur = cubeState.ub;
 		cubeState.ub = tmp;
 
-		// 角块
+		// Corner pieces
 		tmp = cubeState.ulf;
 		cubeState.ulf = cubeState.ufr;
 		cubeState.ufr = cubeState.urb;
@@ -201,16 +201,16 @@ solver.logic = function(cube) {
 		cubeState.ubl = tmp;
 	}
 
-	// Down 面顺时针旋转 90°
+	// Down face clockwise rotation 90°
 	function Twist_D() {
-		// 棱块
+		// Edge pieces
 		var tmp = cubeState.dl;
 		cubeState.dl = cubeState.db;
 		cubeState.db = cubeState.dr;
 		cubeState.dr = cubeState.df;
 		cubeState.df = tmp;
 
-		// 角块
+		// Corner pieces
 		tmp = cubeState.dlf;
 		cubeState.dlf = cubeState.dbl;
 		cubeState.dbl = cubeState.drb;
@@ -218,12 +218,12 @@ solver.logic = function(cube) {
 		cubeState.dfr = tmp;
 	}
 
-	// 整体顺时针旋转 90°
+	// Whole cube clockwise rotation 90°
 	function Twist_Y() {
-		// 顶层
+		// Top layer
 		Twist_U();
 
-		// 中层
+		// Middle layer
 		var tmp = cubeState.lf;
 		cubeState.lf = cubeState.fr;
 		cubeState.fr = cubeState.rb;
@@ -236,54 +236,54 @@ solver.logic = function(cube) {
 		cubeState.b = cubeState.l;
 		cubeState.l = tmp;
 
-		// 底层
+		// Bottom layer
 		Twist_D(), Twist_D(), Twist_D();
 	}
 
-	// ------------------- 魔方组合动作 -------------------
+	// ------------------- Cube move combinations -------------------
 	function changeState(order_list) {
 		for (order of order_list) {
 			switch(order) {
-				case "D": 	//D: Down 面顺时针旋转 90°
+				case "D": 	//D: Down face clockwise rotation 90°
 					Twist_D();
 					break;
-				case "d": 	//d: Down 面逆时针旋转 90°
+				case "d": 	//d: Down face counterclockwise rotation 90°
 					Twist_D(); Twist_D(); Twist_D();
 					break;
-				case "U": 	//U: Up 面顺时针旋转 90°
+				case "U": 	//U: Up face clockwise rotation 90°
 					Twist_U();
 					break;
-				case "u": 	//u: Up 面逆时针旋转 90°
+				case "u": 	//u: Up face counterclockwise rotation 90°
 					Twist_U(); Twist_U(); Twist_U();
 					break;
-				case "L": 	//L: Left 面顺时针旋转 90°
+				case "L": 	//L: Left face clockwise rotation 90°
 					Twist_L();
 					break;
-				case "l": 	//l: Left 面逆时针旋转 90°
+				case "l": 	//l: Left face counterclockwise rotation 90°
 					Twist_L(); Twist_L(); Twist_L();
 					break;
-				case "F": 	//F: Front 面顺时针旋转 90°
+				case "F": 	//F: Front face clockwise rotation 90°
 					Twist_F();
 					break;
-				case "f": 	//f: Front 面逆时针旋转 90°
+				case "f": 	//f: Front face counterclockwise rotation 90°
 					Twist_F(); Twist_F(); Twist_F();
 					break;
-				case "R": 	//R: Right 面顺时针旋转 90°
+				case "R": 	//R: Right face clockwise rotation 90°
 					Twist_R();
 					break;
-				case "r": 	//r - Right 面逆时针旋转 90°
+				case "r": 	//r - Right face counterclockwise rotation 90°
 					Twist_R(); Twist_R(); Twist_R();
 					break;
-				case "B": 	//B - Back 面顺时针旋转 90°
+				case "B": 	//B - Back face clockwise rotation 90°
 					Twist_B();
 					break;
-				case "b": 	//b - Back 面逆时针旋转 90°
+				case "b": 	//b - Back face counterclockwise rotation 90°
 					Twist_B(); Twist_B(); Twist_B();
 					break;
-				case "Y": 	//Y - 整体顺时针旋转 90°
+				case "Y": 	//Y - Whole cube clockwise rotation 90°
 					Twist_Y();
 					break;
-				case "y": 	//Y - 整体逆时针旋转 90°
+				case "y": 	//Y - Whole cube counterclockwise rotation 90°
 					Twist_Y(); Twist_Y(); Twist_Y();
 					break;
 			}
@@ -291,8 +291,8 @@ solver.logic = function(cube) {
 	}
 
 
-	// ---------------------------- 层先法还原 ----------------------------
-	// --------------- 查找当前要调整的块所在位置 ---------------
+	// ---------------------------- Layer by Layer Solution ----------------------------
+	// --------------- Find current block position ---------------
 	function getBlockPos(block) {
     const reg = new RegExp("[" + block + "]{" + block.length + "}");
     //console.log(reg)
@@ -301,7 +301,7 @@ solver.logic = function(cube) {
     }
 	}
 
-	// --------------- 调整单个底棱块  ---------------
+	// --------------- Solve single bottom edge piece  ---------------
 	function FIRST_LAYER_EDGES_SINGLE(block_pos, block_color) {
 		var exp = "", exp_log = "", s;
 		for (let i = 0; i < 7; i++) {
@@ -309,7 +309,7 @@ solver.logic = function(cube) {
 			//console.log(s)
 			if (s.k.indexOf("d") != -1) {
 				if (s.v[0] == block_color[0]) {
-					if (s.k == block_pos) return exp_log; // 返回单个底棱块复原公式
+					if (s.k == block_pos) return exp_log; // Return solution for single bottom edge piece
 					else exp = s.k[1].toUpperCase() + s.k[1].toUpperCase();
 				}
 				else exp = s.k[1].toUpperCase();
@@ -342,22 +342,22 @@ solver.logic = function(cube) {
 		return "First Layer Cross Single Error: " + exp_log;
 	}
 
-	// --------------- 调整单个底角块  ---------------
+	// --------------- Solve single bottom corner piece  ---------------
 	function FIRST_LAYER_CORNERS_SINGLE(block_pos, block_color) {
 		var exp = "", exp_log = "", s;
 		for (let i = 0; i < 10; i++) {
 			s = getBlockPos(block_color);
 			if (s.k.indexOf("d") != -1) {
-				// 所找的角块在底面位置
+				// Corner piece is in bottom layer
 				if (s.v[0] == cubeState["d"]) {
-					if (s.k == block_pos) return exp_log;	// 返回单个底角块复原公式
+					if (s.k == block_pos) return exp_log;	// Return solution for single bottom corner piece
 					else exp = s.k[1] + "U" + s.k[1].toUpperCase();
 				}
 				else if (s.v[1] == cubeState["d"]) exp = s.k[1] + "u" + s.k[1].toUpperCase();
 				else exp = s.k[2].toUpperCase() + "U" + s.k[2];
 			}
 			else {
-				//所找的角块在顶面位置
+				// Corner piece is in top layer
 				if (s.k == "u" + block_pos[1] + block_pos[2]) {
 					if (s.v[0] == cubeState["d"]) exp = s.k[2].toUpperCase() + "u" + s.k[2];
 					else if (s.v[1] == cubeState["d"]) exp = s.k[1] + "u" + s.k[1].toUpperCase();
@@ -372,7 +372,7 @@ solver.logic = function(cube) {
 		return "First Layer Corners Single Error: " + exp_log;
 	};
 
-	// --------------- 调整单个中棱块  ---------------
+	// --------------- Solve single middle edge piece  ---------------
 	function SECOND_LAYER_SINGLE(block_pos, block_color)
 	{
 		var exp = "", exp_log = "", s;
@@ -393,7 +393,7 @@ solver.logic = function(cube) {
 				}
 			}
 			else {
-				if (s.v[0] == cubeState[s.k[0]] && s.v[1] == cubeState[s.k[1]]) return exp_log; // 返回复原公式
+				if (s.v[0] == cubeState[s.k[0]] && s.v[1] == cubeState[s.k[1]]) return exp_log; // Return solution
 				else exp = "u" + s.k[0] + "U" + s.k[0].toUpperCase() + "U" + s.k[1].toUpperCase() + "u" + s.k[1];
 			}
 			exp_log += exp;
@@ -403,9 +403,9 @@ solver.logic = function(cube) {
 		return "Second Layer Single Error: " + exp_log;
 	}
 
-	// --------------- 底棱归位 | COMPLETE THE FIRST LAYER EDGES ---------------
+	// --------------- Complete first layer edges | COMPLETE THE FIRST LAYER EDGES ---------------
 	function FIRST_LAYER_EDGES() {
-		console.log("------------ 第一步：底棱归位 | COMPLETE THE FIRST LAYER EDGES ------------");
+		console.log("------------ Step 1: Complete first layer edges | COMPLETE THE FIRST LAYER EDGES ------------");
 		let order = "";
 		order += FIRST_LAYER_EDGES_SINGLE("dl", cubeState["d"] + cubeState["l"]);
 		order += FIRST_LAYER_EDGES_SINGLE("df", cubeState["d"] + cubeState["f"]);
@@ -415,9 +415,9 @@ solver.logic = function(cube) {
 		//Execute(order, "First layer edges");
 	};
 
-	// -------------- 底角归位 | COMPLETE THE FIRST LAYER CORNERS --------------
+	// -------------- Complete first layer corners | COMPLETE THE FIRST LAYER CORNERS --------------
 	function FIRST_LAYER_CORNERS() {
-		console.log("------------ 第二步：底角归位  | COMPLETE THE FIRST LAYER CORNERS ------------");
+		console.log("------------ Step 2: Complete first layer corners  | COMPLETE THE FIRST LAYER CORNERS ------------");
 		let order = "";
 		order += FIRST_LAYER_CORNERS_SINGLE("dlf", cubeState["d"] + cubeState["l"] + cubeState["f"]);
 		order += FIRST_LAYER_CORNERS_SINGLE("dfr", cubeState["d"] + cubeState["f"] + cubeState["r"]);
@@ -427,9 +427,9 @@ solver.logic = function(cube) {
 		//Execute(order, "First layer corners");
 	}
 
-	// --------------- 中棱归位 | COMPLETE THE SECOND LAYER ---------------
+	// --------------- Complete second layer | COMPLETE THE SECOND LAYER ---------------
 	function SECOND_LAYER() {
-		console.log("------------ 第三步：中棱归位  | COMPLETE THE SECOND LAYER ------------");
+		console.log("------------ Step 3: Complete second layer  | COMPLETE THE SECOND LAYER ------------");
 		let order = "";
 		order += SECOND_LAYER_SINGLE("lf", cubeState["l"] + cubeState["f"]);
 		order += SECOND_LAYER_SINGLE("fr", cubeState["f"] + cubeState["r"]);
@@ -438,16 +438,16 @@ solver.logic = function(cube) {
 		return compress(order);
 	};
 
-	// --------------- 顶部十字 | COMPLETE THE TOP CROSS ---------------
+	// --------------- Complete top cross | COMPLETE THE TOP CROSS ---------------
 	function TOP_CROSS() {
-		console.log("------------ 第四步：顶部十字 | COMPLETE THE TOP CROSS ------------");
+		console.log("------------ Step 4: Complete top cross | COMPLETE THE TOP CROSS ------------");
 		var exp = "", exp_log = "";
-		var uc = cubeState["u"]; // 顶层颜色
+		var uc = cubeState["u"]; // Top layer color
 
 		for(let i = 0; i < 4; i++) {
 			if(cubeState.ul[0] == uc && cubeState.ur[0] == uc
 				&& cubeState.uf[0] == uc && cubeState.ub[0] == uc)
-				return compress(exp_log); // 返回复原公式
+				return compress(exp_log); // Return solution
 			else if(cubeState.ul[0] == uc && cubeState.ur[0] == uc) exp = "FRUruf";
 			else if(cubeState.uf[0] == uc && cubeState.ub[0] == uc) exp = "RBUbur";
 			else if(cubeState.uf[0] == uc && cubeState.ur[0] == uc) exp = "FRUruf";
@@ -462,25 +462,25 @@ solver.logic = function(cube) {
 		return "Top Cross Error: " + exp_log;
 	};
 
-	// ----- 顶角归位（位置） | COMPLETE THE THIRD LAYER CORNERS (POSITION) -----
+	// ----- Complete third layer corners (position) | COMPLETE THE THIRD LAYER CORNERS (POSITION) -----
 	function THIRD_LAYER_CORNERS_POS() {
-		console.log("------------ 第五步：顶角归位（位置） | COMPLETE THE THIRD LAYER CORNERS (POSITION) ------------");
+		console.log("------------ Step 5: Complete third layer corners (position) | COMPLETE THE THIRD LAYER CORNERS (POSITION) ------------");
 		const step = "rLUluRULul", blocks = ["ulf", "ufr", "urb", "ubl"], uc = cubeState["u"];
     var exp_log = "";
 
 		for (let i = 0; i < 4; i++) {
 			var last = i;
-			var times = 0; // 顶层有多少角块位置是对的
+			var times = 0; // How many corner pieces are in correct position on top layer
 			for (let j = i + 1; j < i + 4; j++) {
 				const next = j % 4;
 
-				// 上一个块除去顶层颜色后的颜色
+				// Colors of previous block excluding top color
 				lastc = cubeState[blocks[last]].replace(uc, "");
-				// 这个块除去顶层颜色后的颜色
+				// Colors of current block excluding top color
 				nextc = cubeState[blocks[next]].replace(uc, "");
 
 				if (nextColor[lastc[0]] == lastc[1]) {
-					// 复原后的魔方中，这个块正好就应该在上一个块的后面
+					// In solved cube, this block should be right after the previous block
 					if (nextc.indexOf(lastc[1]) != -1
 						&& nextc.indexOf(nextColor[lastc[1]]) != -1) times += 1;
 					else break;
@@ -500,20 +500,20 @@ solver.logic = function(cube) {
 				else if (last == 1) exp_log = step, changeState(exp_log);
 				else if (last == 2) exp_log = "U" + step, changeState(exp_log);
 				else if (last == 3) exp_log = "UU" + step, changeState(exp_log);
-				return compress(exp_log); // 返回复原公式
+				return compress(exp_log); // Return solution
 			}
-			// times > 1 说明顶层角块位置本来就是对的，不需要调整
+			// times > 1 means top corner pieces are already in correct position
 			else if (times > 1) return compress(exp_log);
 		}
 
 		exp_log = step + "U" + step;
 		changeState(exp_log);
-		return compress(exp_log); // 返回复原公式
+		return compress(exp_log); // Return solution
 	}
 
-	// ----- 顶角归位（方向） | COMPLETE THE THIRD LAYER CORNERS (ORIENT) -----
+	// ----- Complete third layer corners (orientation) | COMPLETE THE THIRD LAYER CORNERS (ORIENT) -----
 	function THIRD_LAYER_CORNERS_ORI() {
-		console.log("------------ 第六步：顶角归位（方向） | COMPLETE THE THIRD LAYER CORNERS (ORIENT) ------------");
+		console.log("------------ Step 6: Complete third layer corners (orientation) | COMPLETE THE THIRD LAYER CORNERS (ORIENT) ------------");
 		const step1 = "ruRuruuRuu", step2 = "FUfUFUUfUU";
 		const blocks = ["ulf", "ufr", "urb", "ubl"], uc = cubeState["u"];
     var exp_log = "", s = "";
@@ -565,16 +565,16 @@ solver.logic = function(cube) {
 
 		changeState(exp_log);
 		console.log(exp_log)
-		return compress(exp_log); // 返回复原公式
+		return compress(exp_log); // Return solution
 	}
 
-	// --------------- 顶棱归位 | COMPLETE THE THIRD LAYER EDGES ---------------
+	// --------------- Complete third layer edges | COMPLETE THE THIRD LAYER EDGES ---------------
 	function THIRD_LAYER_EDGES() {
-		console.log("------------ 第七步：顶棱归位 | COMPLETE THE THIRD LAYER EDGES ------------")
+		console.log("------------ Step 7: Complete third layer edges | COMPLETE THE THIRD LAYER EDGES ------------")
 		const step1 = "ruRuruuRuu", step2 = "FUfUFUUfUU";
     var exp_log = "";
 
-		// 顶层整体方向
+		// Top layer overall orientation
 		while (cubeState.ulf[2] != cubeState.f) {
 			changeState("U");
 			exp_log += "U";
@@ -593,8 +593,8 @@ solver.logic = function(cube) {
 			// console.log(s, c)
 			// console.log(times, pos)
 
-			// 顶层棱块位置已正确
-			if (times > 1) return compress(exp_log) // 返回复原公式
+			// Top edge pieces are already in correct position
+			if (times > 1) return compress(exp_log) // Return solution
 			else if (times == 1) {
 				if (pos == 1) exp += "Y";
 				else if (pos == 2) exp += "YY";
@@ -614,7 +614,7 @@ solver.logic = function(cube) {
 		return "Third Layer Edges Error: " + exp_log;
 	}
 
-	//  ------------------- 返回魔方复原步骤 -------------------
+	//  ------------------- Return cube solution steps -------------------
 	function solveCube() {
 		let steps = [];
 		steps.push(FIRST_LAYER_EDGES());
@@ -627,8 +627,8 @@ solver.logic = function(cube) {
 		Execute(steps);
 	};
 
-	// ------------------- 压缩指令数 -------------------
-	// 如："uuu" = "U"（逆时针转 270° = 顺时针转 90°）
+	// ------------------- Compress move count -------------------
+	// Example: "uuu" = "U" (counterclockwise 270° = clockwise 90°)
 	function compress(order) {
 		for(let i = 0; i < 10; i++) {
 			order = order.replace(/uU|Uu|dD|Dd|lL|Ll|fF|Ff|rR|Rr|bB|Bb|yY|Yy|uuuu|dddd|llll|ffff|rrrr|bbbb|yyyy|UUUU|DDDD|LLLL|FFFF|RRRR|BBBB|YYYY/g, "");
