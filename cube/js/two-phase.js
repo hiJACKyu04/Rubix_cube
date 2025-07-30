@@ -3,8 +3,10 @@ function solveTwoPhase() {
 	if (cubeGL.isSolved() == true) typeInfo("The cube is already solved.", false);
 	else {
 		const solve_step = cubeTwoPhase.solve();
+		//console.log(solve_step)
     cubeGL.twist(solve_step);
     
+    // Count the number of moves
     const moveCount = solve_step.length;
     typeInfo("Two-phase: " + solve_step + " (" + moveCount + " moves)", false);
 	}
