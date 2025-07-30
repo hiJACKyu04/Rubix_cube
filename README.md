@@ -21,7 +21,7 @@ A Rubik's cube solver with interactive 3D visualization and multiple solving alg
 
 ## Play It
 
-Open `index.html` in your web browser to run the application locally.
+[Geo_Cube](https://hijackyu04.github.io/Rubix_cube/)
 
 &nbsp;
 

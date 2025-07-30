@@ -5,8 +5,6 @@
 	UPPERCASE = Clockwise to next 90 degree peg
 	lowercase = Anticlockwise to next 90 degree peg
 
-
-
 	FACE & SLICE ROTATION COMMANDS
 
 	F	Front
@@ -21,15 +19,11 @@
 	E 	Equator (rotate according to Up Face's orientation)
 	D 	Down
 
-
-
 	ENTIRE CUBE ROTATION COMMANDS
 
 	X   Rotate entire cube according to Right Face's orientation
 	Y   Rotate entire cube according to Up Face's orientation
 	Z   Rotate entire cube according to Front Face's orientation
-
-
 
 	NOTATION REFERENCES
 
@@ -37,13 +31,10 @@
 	http://en.wikibooks.org/wiki/Template:Rubik's_cube_notation
 */
 
-
 $(document).ready(function() {
-	// -------------------- cubejs --------------------
 	cubeTwoPhase = new Cube();
 	Cube.initSolver();
 
-	// -------------------- cuber --------------------
 	var useLockedControls = true,
 		controls = useLockedControls ? ERNO.Locked : ERNO.Freeform;
 
@@ -67,25 +58,9 @@ $(document).ready(function() {
 		cubeGL.rotation.z += fixedOrientation.z;
 	}
 
-	// The deviceMotion function provide some subtle mouse based motion
-	// The effect can be used with the Freeform and Locked controls.
-	// This could also integrate device orientation on mobile
-
-	// var motion = deviceMotion( cubeGL, container );
-
-	// motion.decay = 0.1; 				// The drag effect
-	// motion.range.x = Math.PI * 0.06;	// The range of rotation
-	// motion.range.y = Math.PI * 0.06;
-	// motion.range.z = 0;
-	// motion.paused = false;				// disables the effect
-
 	cubeGL.twistDuration = 300;
 	cubeGL.twist('xY');
-	//cubeGL.shuffle();
-	//cubeGL.twist('d');
-	//cubeGL.solve();
 	
-	// Initialize 2D cube view after cube is ready
 	setTimeout(() => {
 		if (window.update2DCubeView) {
 			window.update2DCubeView();
