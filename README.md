@@ -136,7 +136,7 @@ The JavaScript implementation of [Herbert Kociemba's two-phase algorithm](http:/
 ## Usage
 
 1. **Shuffle**: Click "Shuffle" to randomize the cube
-2. **Custom Shuffle**: Enter a valid move sequence (e.g., "R U R' U'") and click "Custom Shuffle"
+2. **Custom Shuffle**: Enter a valid move sequence (e.g., "R U X U'") and click "Custom Shuffle"
 3. **Solve**: Choose between "LBL" (Layer By Layer) or "Two-Phase" solving algorithms
 4. **2D View**: Watch the real-time 2D representation update as you manipulate the cube
 5. **History**: Scroll down to view the terminal history of all operations
@@ -149,6 +149,4 @@ The custom shuffle input accepts standard Rubik's cube notation:
 - **Face moves**: U, D, L, R, F, B (clockwise) and u, d, l, r, f, b (counterclockwise)
 - **Slice moves**: S, M, E (clockwise) and s, m, e (counterclockwise)
 - **Whole cube**: X, Y, Z (clockwise) and x, y, z (counterclockwise)
-- **Double moves**: Add '2' to any move (e.g., U2, R2)
-- **Prime moves**: Add ' to any move for counterclockwise (e.g., U', R')
 
