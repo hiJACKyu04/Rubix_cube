@@ -152,21 +152,22 @@ For example:
 The custom shuffle input accepts standard Rubik's cube notation:
 
 ### Move Notation Conversion
-
-| Standard Notation | Project Notation |                       Description                       |
-|-------------------|------------------|---------------------------------------------------------|
-|       U, U'       |       U, u       | Up face (clockwise/counterclockwise)                    |
-|       D, D'       |       D, d       | Down face (clockwise/counterclockwise)                  |
-|       L, L'       |       L, l       | Left face (clockwise/counterclockwise)                  |
-|       R, R'       |       R, r       | Right face (clockwise/counterclockwise)                 |
-|       F, F'       |       F, f       | Front face (clockwise/counterclockwise)                 |
-|       B, B'       |       B, b       | Back face (clockwise/counterclockwise)                  |
-|       E, E'       |       E, e       | Equator slice (clockwise/counterclockwise)              |
-|       M, M'       |       M, m       | Middle slice (clockwise/counterclockwise)               |
-|       S, S'       |       S, s       | Standing slice (clockwise/counterclockwise)             |
-|       X, X'       |       x, X       | Whole cube rotation like R (clockwise/counterclockwise) |
-|       Y, Y'       |       y, Y       | Whole cube rotation like U (clockwise/counterclockwise) |
-|       Z, Z'       |       z, Z       | Whole cube rotation like F (clockwise/counterclockwise) |
+┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ Standard Notation │ Project Notation │                       Description                       │
+├───────────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│       U, U'       │       U, u       │ Up face (clockwise/counterclockwise)                    │
+│       D, D'       │       D, d       │ Down face (clockwise/counterclockwise)                  │
+│       L, L'       │       L, l       │ Left face (clockwise/counterclockwise)                  │
+│       R, R'       │       R, r       │ Right face (clockwise/counterclockwise)                 │
+│       F, F'       │       F, f       │ Front face (clockwise/counterclockwise)                 │
+│       B, B'       │       B, b       │ Back face (clockwise/counterclockwise)                  │
+│       E, E'       │       E, e       │ Equator slice (clockwise/counterclockwise)              │
+│       M, M'       │       M, m       │ Middle slice (clockwise/counterclockwise)               │
+│       S, S'       │       S, s       │ Standing slice (clockwise/counterclockwise)             │
+│       X, X'       │       x, X       │ Whole cube rotation like R (clockwise/counterclockwise) │
+│       Y, Y'       │       y, Y       │ Whole cube rotation like U (clockwise/counterclockwise) │
+│       Z, Z'       │       z, Z       │ Whole cube rotation like F (clockwise/counterclockwise) │
+└────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 ### Supported Moves
 - **Face moves**: U, D, L, R, F, B (clockwise) and u, d, l, r, f, b (counterclockwise)
